@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>✨ Gender Reveal ✨</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@400;500;700&family=Sacramento&display=swap" rel="stylesheet" />
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Floating decorative particles (created via JS) -->
+  <div id="particles"></div>
+
+  <!-- ============ SCREEN 1: WELCOME ============ -->
+  <section id="screen-welcome" class="screen active">
+    <div class="card">
+      <div class="card-ornament top-left"></div>
+      <div class="card-ornament top-right"></div>
+      <div class="card-ornament bottom-left"></div>
+      <div class="card-ornament bottom-right"></div>
+
+      <p class="card-script">he or she…</p>
+      <h1 class="card-title">What Will Baby Be?</h1>
+      <p class="card-subtitle">A magical moment awaits</p>
+
+      <button id="btn-start" class="btn btn-primary">
+        <span class="btn-sparkle"></span>
+        Start Reveal
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 2: NAME INPUT ============ -->
+  <section id="screen-name" class="screen">
+    <div class="card">
+      <div class="card-ornament top-left"></div>
+      <div class="card-ornament top-right"></div>
+
+      <p class="card-script">before we begin…</p>
+      <h2 class="card-title small">What's Your Name?</h2>
+
+      <input
+        type="text"
+        id="input-name"
+        class="text-input"
+        placeholder="Enter your name"
+        autocomplete="off"
+      />
+
+      <button id="btn-name-submit" class="btn btn-primary">
+        Continue
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 3: WIFE CHECK ============ -->
+  <section id="screen-wife-check" class="screen">
+    <div class="card">
+      <div class="card-ornament top-left"></div>
+      <div class="card-ornament top-right"></div>
+
+      <p class="card-script">one quick thing…</p>
+      <h2 class="card-title small">Are You the Wife?</h2>
+      <p class="card-subtitle">Only the mama-to-be can take the quiz!</p>
+
+      <div class="btn-row">
+        <button id="btn-wife-yes" class="btn btn-primary">Yes, That's Me!</button>
+        <button id="btn-wife-no" class="btn btn-secondary">Nope</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 4: NOT WIFE ============ -->
+  <section id="screen-not-wife" class="screen">
+    <div class="card">
+      <p class="card-script">patience…</p>
+      <h2 class="card-title small">Nice Try! 😄</h2>
+      <p class="card-subtitle">Only the expecting mama can unlock the prediction.<br/>Sit tight — the big reveal is coming!</p>
+      <button id="btn-back-home" class="btn btn-secondary">Back to Start</button>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 5: QUIZ ============ -->
+  <section id="screen-quiz" class="screen">
+    <div class="card card-quiz">
+      <div class="card-ornament top-left"></div>
+      <div class="card-ornament top-right"></div>
+
+      <p class="card-script">old wives' tales say…</p>
+      <h2 class="card-title small" id="quiz-title">Predictor Quiz</h2>
+
+      <!-- Progress bar -->
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <p class="progress-label"><span id="q-current">1</span> / <span id="q-total">12</span></p>
+
+      <!-- Question -->
+      <p class="quiz-question" id="quiz-question-text">Loading…</p>
+
+      <!-- Answer buttons -->
+      <div class="btn-row">
+        <button id="btn-yes" class="btn btn-quiz-yes">Yes</button>
+        <button id="btn-no" class="btn btn-quiz-no">No</button>
+      </div>
+
+      <!-- Sliding meter -->
+      <div class="meter-wrapper">
+        <span class="meter-label boy">👦 Boy</span>
+        <div class="meter-track">
+          <div class="meter-indicator" id="meter-indicator"></div>
+        </div>
+        <span class="meter-label girl">👧 Girl</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 6: COUNTDOWN ============ -->
+  <section id="screen-countdown" class="screen">
+    <div class="card card-countdown">
+      <p class="card-script" id="countdown-quip">Get ready…</p>
+      <h2 class="countdown-number" id="countdown-number">10</h2>
+      <div class="countdown-ring">
+        <svg viewBox="0 0 120 120">
+          <circle class="ring-bg" cx="60" cy="60" r="54" />
+          <circle class="ring-progress" id="ring-progress" cx="60" cy="60" r="54" />
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 7: FINAL REVEAL ============ -->
+  <section id="screen-reveal" class="screen">
+    <!-- Video element (hidden until needed) -->
+    <video id="reveal-video" class="reveal-video" playsinline></video>
+
+    <div class="card card-reveal" id="reveal-card">
+      <p class="card-script">and the baby is…</p>
+      <h1 class="reveal-result" id="reveal-result">🎀 Girl! 🎀</h1>
+      <p class="reveal-subtitle" id="reveal-subtitle">The Old Wives have spoken!</p>
+      <button id="btn-restart" class="btn btn-primary">Start Over</button>
+    </div>
+
+    <!-- Confetti canvas -->
+    <canvas id="confetti-canvas"></canvas>
+  </section>
+
+  <!-- JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
