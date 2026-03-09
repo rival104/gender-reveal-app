@@ -269,8 +269,8 @@ function startCountdown() {
 // ==============================================
 function doReveal() {
   // Determine result
-  const isBoy = boyScore >= girlScore;
-  const gender = isBoy ? "boy" : "girl";
+  const isBoy = false; // boyScore >= girlScore;
+  const gender = boyScore >= girlScore ? "boy" : "girl";
 
   // Update reveal card content
   if (isBoy) {
