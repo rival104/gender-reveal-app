@@ -284,6 +284,8 @@ body {
 /* ---------- Quiz Specific ---------- */
 .card-quiz {
   max-width: 540px;
+  position: relative;
+  z-index: 2;
 }
 
 /* Progress bar */
@@ -418,6 +420,26 @@ body {
 #countdown-quip {
   font-size: 1.4rem;
   margin-bottom: 8px;
+}
+
+/* ---------- Quiz Flash Overlay ---------- */
+.quiz-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.8s ease-out;
+}
+
+.quiz-flash.flash-boy {
+  background: rgba(106, 173, 207, 0.3);
+  opacity: 1;
+}
+
+.quiz-flash.flash-girl {
+  background: rgba(232, 114, 154, 0.3);
+  opacity: 1;
 }
 
 /* ---------- Reveal Screen ---------- */

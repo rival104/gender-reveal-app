@@ -210,6 +210,11 @@ function answerQuestion(answeredYes) {
     else boyScore++;
   }
 
+  // Brief color flash showing which team scored
+  const flashEl = document.getElementById("quiz-flash");
+  flashEl.className = "quiz-flash flash-" + (answeredYes ? q.yesTeam : (q.yesTeam === "boy" ? "girl" : "boy"));
+  setTimeout(() => { flashEl.className = "quiz-flash"; }, 1500);
+
   // Update the sliding meter (0% = full boy, 100% = full girl)
   const total = boyScore + girlScore;
   const girlPct = total === 0 ? 50 : (girlScore / total) * 100;
