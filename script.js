@@ -476,6 +476,23 @@ btnRestart.addEventListener("click", () => resetApp());
 // ==============================================
 // 13. INITIALIZATION
 // ==============================================
+
+// Due date countdown
+(function updateDueCountdown() {
+  const dueDate = new Date("2026-09-13");
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const diffDays = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+  const el = document.getElementById("due-countdown");
+  if (diffDays > 0) {
+    el.textContent = `Baby arrives in ${diffDays} day${diffDays === 1 ? "" : "s"}!`;
+  } else if (diffDays === 0) {
+    el.textContent = "Today's the day!";
+  } else {
+    el.textContent = "Baby is here!";
+  }
+})();
+
 createParticles();
 
 // Handle window resize for confetti canvas
