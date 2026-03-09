@@ -474,6 +474,28 @@ body {
   margin-bottom: 12px;
 }
 
+.gender-badge {
+  display: inline-block;
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: 4px 14px;
+  border-radius: 8px;
+  letter-spacing: 0.05em;
+  vertical-align: middle;
+}
+
+.gender-badge.boy {
+  color: var(--boy-color);
+  background: rgba(106, 173, 207, 0.15);
+  border: 2px solid var(--boy-color);
+}
+
+.gender-badge.girl {
+  color: var(--girl-color);
+  background: rgba(232, 114, 154, 0.15);
+  border: 2px solid var(--girl-color);
+}
+
 /* Confetti canvas */
 #confetti-canvas {
   position: fixed;

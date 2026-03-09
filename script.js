@@ -283,7 +283,10 @@ function doReveal() {
     document.body.style.background = "linear-gradient(160deg, #fdf0f4 0%, #f8d0e0 100%)";
   }
 
-  revealSubtitle.textContent = `The Old Wives predicted ${gender} for ${userName || "you"}!`;
+  const totalQ = quizQuestions.length;
+  const winScore = gender === "boy" ? boyScore : girlScore;
+  const pct = Math.round((winScore / totalQ) * 100);
+  revealSubtitle.innerHTML = `The Old Wives predicted <span class="gender-badge ${gender}">${gender.toUpperCase()} (${pct}%)</span> for ${userName || "you"}!`;
 
   // Show the reveal screen with video first
   showScreen("reveal");
