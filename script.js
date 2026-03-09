@@ -420,11 +420,12 @@ btnNameSubmit.addEventListener("click", () => {
   inputName.style.borderColor = "";
 
   // Special flow: if the name is "umm" (case-insensitive), ask wife check
-  if (userName.toLowerCase() === "umm") {
+  // Check if name is umma or maleha
+  if (userName.toLowerCase() === "umma" || userName.toLowerCase() === "maleha") {
     showScreen("wifeCheck");
   } else {
     // For any other name, go straight to the quiz
-    startQuiz();
+    showScreen("notWife")
   }
 });
 
