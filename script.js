@@ -285,12 +285,29 @@ function doReveal() {
 
   revealSubtitle.textContent = `The Old Wives predicted ${gender} for ${userName || "you"}!`;
 
-  // Show screen and launch confetti
+  // Show the reveal screen with video first
   showScreen("reveal");
 
-  setTimeout(() => {
+  // Hide the card while video plays
+  const revealCard = document.getElementById("reveal-card");
+  revealCard.style.display = "none";
+
+  // Play the reveal video
+  revealVideo.currentTime = 0;
+  revealVideo.classList.add("playing");
+  revealVideo.play().catch(() => {
+    // If video fails to play (e.g. missing file), skip straight to card
+    revealVideo.classList.remove("playing");
+    revealCard.style.display = "";
     launchConfetti(gender);
-  }, 300);
+  });
+
+  // When video ends, show the card and confetti
+  revealVideo.onended = () => {
+    revealVideo.classList.remove("playing");
+    revealCard.style.display = "";
+    setTimeout(() => launchConfetti(gender), 300);
+  };
 }
 
 // ==============================================
