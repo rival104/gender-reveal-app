@@ -185,7 +185,7 @@ function showScreen(screenKey) {
 // ==============================================
 function createParticles() {
   const container = document.getElementById("particles");
-  const colors = ["#e8729a", "#6aadcf", "#d4a853", "#c66dd8", "#68d391"];
+  const colors = ["#c4b5a0", "#a8a29e", "#d4a853", "#b8b0a8", "#d6cdc4"];
 
   for (let i = 0; i < 30; i++) {
     const p = document.createElement("div");

@@ -6,21 +6,22 @@
 /* ---------- CSS Variables ---------- */
 :root {
   /* Palette */
-  --bg-start: #fdf6f0;
-  --bg-end: #f0e6f6;
-  --card-bg: rgba(255, 255, 255, 0.85);
-  --card-border: rgba(255, 255, 255, 0.6);
-  --text-primary: #2d2a3e;
-  --text-secondary: #7a7490;
+  --bg-start: #f5f3f0;
+  --bg-mid: #eae7e3;
+  --bg-end: #e8e4e0;
+  --card-bg: rgba(255, 255, 255, 0.7);
+  --card-border: rgba(255, 255, 255, 0.5);
+  --text-primary: #2c2c2e;
+  --text-secondary: #6e6e73;
   --accent-pink: #e8729a;
   --accent-blue: #6aadcf;
   --accent-gold: #d4a853;
-  --btn-primary-bg: linear-gradient(135deg, #e8729a 0%, #c66dd8 100%);
-  --btn-primary-hover: linear-gradient(135deg, #d4608a 0%, #b55dc5 100%);
+  --btn-primary-bg: linear-gradient(135deg, #c4a265 0%, #d4a853 50%, #b8923f 100%);
+  --btn-primary-hover: linear-gradient(135deg, #b8923f 0%, #c4a265 50%, #a8832f 100%);
   --btn-secondary-bg: rgba(255, 255, 255, 0.5);
   --btn-secondary-hover: rgba(255, 255, 255, 0.8);
-  --shadow-soft: 0 8px 32px rgba(45, 42, 62, 0.10);
-  --shadow-lifted: 0 16px 48px rgba(45, 42, 62, 0.15);
+  --shadow-soft: 0 8px 32px rgba(44, 44, 46, 0.08);
+  --shadow-lifted: 0 16px 48px rgba(44, 44, 46, 0.12);
   --radius: 24px;
   --radius-sm: 14px;
 
@@ -47,7 +48,7 @@ html, body {
   overflow-x: hidden;
   font-family: var(--font-body);
   color: var(--text-primary);
-  background: linear-gradient(160deg, var(--bg-start) 0%, var(--bg-end) 100%);
+  background: linear-gradient(160deg, var(--bg-start) 0%, var(--bg-mid) 50%, var(--bg-end) 100%);
   -webkit-font-smoothing: antialiased;
 }
 
