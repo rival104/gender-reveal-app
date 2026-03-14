@@ -85,21 +85,30 @@ const screens = {
   welcome:   document.getElementById("screen-welcome"),
   name:      document.getElementById("screen-name"),
   wifeCheck: document.getElementById("screen-wife-check"),
-  notWife:   document.getElementById("screen-not-wife"),
+  visitor:   document.getElementById("screen-visitor"),
   quiz:      document.getElementById("screen-quiz"),
   countdown: document.getElementById("screen-countdown"),
+  results:   document.getElementById("screen-results"),
   reveal:    document.getElementById("screen-reveal")
 };
 
 // Buttons
-const btnStart       = document.getElementById("btn-start");
-const btnNameSubmit  = document.getElementById("btn-name-submit");
-const btnWifeYes     = document.getElementById("btn-wife-yes");
-const btnWifeNo      = document.getElementById("btn-wife-no");
-const btnBackHome    = document.getElementById("btn-back-home");
-const btnYes         = document.getElementById("btn-yes");
-const btnNo          = document.getElementById("btn-no");
-const btnRestart     = document.getElementById("btn-restart");
+const btnStart          = document.getElementById("btn-start");
+const btnResults        = document.getElementById("btn-results");
+const btnNameSubmit     = document.getElementById("btn-name-submit");
+const btnWifeYes        = document.getElementById("btn-wife-yes");
+const btnWifeNo         = document.getElementById("btn-wife-no");
+const btnYes            = document.getElementById("btn-yes");
+const btnNo             = document.getElementById("btn-no");
+const btnRestart        = document.getElementById("btn-restart");
+const btnVisitorReview  = document.getElementById("btn-visitor-review");
+const btnVisitorSkip    = document.getElementById("btn-visitor-skip");
+const btnVisitorToVote  = document.getElementById("btn-visitor-to-vote");
+const btnVoteBoy        = document.getElementById("btn-vote-boy");
+const btnVoteGirl       = document.getElementById("btn-vote-girl");
+const btnVisitorResults = document.getElementById("btn-visitor-results");
+const btnVisitorHome    = document.getElementById("btn-visitor-home");
+const btnResultsHome    = document.getElementById("btn-results-home");
 
 // Inputs & displays
 const inputName       = document.getElementById("input-name");
@@ -117,13 +126,37 @@ const revealVideo     = document.getElementById("reveal-video");
 const confettiCanvas  = document.getElementById("confetti-canvas");
 
 // ==============================================
-// 4. STATE
+// 4. LOCALSTORAGE HELPERS
+// ==============================================
+function getVotes() {
+  return JSON.parse(localStorage.getItem("votes") || "[]");
+}
+
+function saveVote(name, team) {
+  const votes = getVotes();
+  const idx = votes.findIndex(v => v.name.toLowerCase() === name.toLowerCase());
+  if (idx >= 0) votes[idx].team = team;
+  else votes.push({ name, team });
+  localStorage.setItem("votes", JSON.stringify(votes));
+}
+
+function getWifeQuizAnswers() {
+  return JSON.parse(localStorage.getItem("wifeQuizAnswers") || "[]");
+}
+
+function saveWifeQuizAnswers(arr) {
+  localStorage.setItem("wifeQuizAnswers", JSON.stringify(arr));
+}
+
+// ==============================================
+// 5. STATE
 // ==============================================
 let currentQuestion = 0;    // Index of current quiz question
 let boyScore = 0;           // Points for Team Boy
 let girlScore = 0;          // Points for Team Girl
 let userName = "";          // The user's name
 let countdownInterval;      // Reference to countdown timer
+let wifeAnswers = [];       // Tracks wife's quiz answers for saving
 
 // ==============================================
 // 5. SCREEN NAVIGATION
@@ -210,9 +243,13 @@ function answerQuestion(answeredYes) {
     else boyScore++;
   }
 
+  // Record answer for localStorage
+  const scoredTeam = answeredYes ? q.yesTeam : (q.yesTeam === "boy" ? "girl" : "boy");
+  wifeAnswers.push({ question: q.text, answer: answeredYes, scoredTeam });
+
   // Brief color flash showing which team scored
   const flashEl = document.getElementById("quiz-flash");
-  flashEl.className = "quiz-flash flash-" + (answeredYes ? q.yesTeam : (q.yesTeam === "boy" ? "girl" : "boy"));
+  flashEl.className = "quiz-flash flash-" + scoredTeam;
   setTimeout(() => { flashEl.className = "quiz-flash"; }, 1500);
 
   // Update the sliding meter (0% = full boy, 100% = full girl)
@@ -226,7 +263,8 @@ function answerQuestion(answeredYes) {
   if (currentQuestion < quizQuestions.length) {
     showQuestion();
   } else {
-    // Quiz complete — fill progress bar fully
+    // Quiz complete — save answers and fill progress bar fully
+    saveWifeQuizAnswers(wifeAnswers);
     progressFill.style.width = "100%";
     // Transition to countdown after a brief pause
     setTimeout(() => startCountdown(), 800);
@@ -403,6 +441,7 @@ function resetApp() {
   boyScore = 0;
   girlScore = 0;
   userName = "";
+  wifeAnswers = [];
   inputName.value = "";
   meterIndicator.style.left = "50%";
   progressFill.style.width = "0%";
@@ -417,7 +456,81 @@ function resetApp() {
   revealVideo.pause();
   revealVideo.classList.remove("playing");
 
+  // Reset visitor steps
+  document.querySelectorAll(".visitor-step").forEach(s => s.classList.remove("active"));
+  document.getElementById("visitor-welcome").classList.add("active");
+
   showScreen("welcome");
+}
+
+// ==============================================
+// VISITOR FLOW
+// ==============================================
+function visitorShowStep(stepId) {
+  document.querySelectorAll(".visitor-step").forEach(s => s.classList.remove("active"));
+  document.getElementById(stepId).classList.add("active");
+}
+
+function renderWifeAnswers() {
+  const answers = getWifeQuizAnswers();
+  const list = document.getElementById("wife-answers-list");
+  list.innerHTML = "";
+
+  if (answers.length === 0) {
+    list.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:20px;">Mama hasn\'t taken the quiz yet!</p>';
+    return;
+  }
+
+  answers.forEach(a => {
+    const item = document.createElement("div");
+    item.className = "wife-answer-item";
+    item.innerHTML = `
+      <p class="wife-answer-q">${a.question}</p>
+      <div class="wife-answer-tags">
+        <span class="tag ${a.answer ? "tag-yes" : "tag-no"}">${a.answer ? "Yes" : "No"}</span>
+        <span class="tag tag-${a.scoredTeam}">${a.scoredTeam === "boy" ? "👦 Boy" : "👧 Girl"}</span>
+      </div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+// ==============================================
+// VOTE RESULTS
+// ==============================================
+function renderResults() {
+  const votes = getVotes();
+  const boyVotes = votes.filter(v => v.team === "boy");
+  const girlVotes = votes.filter(v => v.team === "girl");
+  const total = votes.length;
+
+  document.getElementById("results-total-count").textContent = total;
+  document.getElementById("boy-count").textContent = boyVotes.length + " vote" + (boyVotes.length !== 1 ? "s" : "");
+  document.getElementById("girl-count").textContent = girlVotes.length + " vote" + (girlVotes.length !== 1 ? "s" : "");
+
+  const boyPct = total === 0 ? 0 : Math.round((boyVotes.length / total) * 100);
+  const girlPct = total === 0 ? 0 : Math.round((girlVotes.length / total) * 100);
+
+  document.getElementById("boy-pct").textContent = boyPct.toFixed(1) + "%";
+  document.getElementById("girl-pct").textContent = girlPct.toFixed(1) + "%";
+  document.getElementById("boy-bar").style.width = boyPct + "%";
+  document.getElementById("girl-bar").style.width = girlPct + "%";
+
+  // Voter list
+  const voterList = document.getElementById("voter-list");
+  voterList.innerHTML = "";
+
+  votes.forEach(v => {
+    const item = document.createElement("div");
+    item.className = "voter-item";
+    const initial = v.name.charAt(0).toUpperCase();
+    item.innerHTML = `
+      <div class="voter-initial ${v.team}">${initial}</div>
+      <span class="voter-name">${v.name}</span>
+      <span class="voter-team ${v.team}">Team ${v.team === "boy" ? "Boy" : "Girl"}</span>
+    `;
+    voterList.appendChild(item);
+  });
 }
 
 // ==============================================
@@ -427,11 +540,16 @@ function resetApp() {
 // Welcome → Name screen
 btnStart.addEventListener("click", () => {
   showScreen("name");
-  // Auto-focus the input after transition
   setTimeout(() => inputName.focus(), 600);
 });
 
-// Name submit → check if name is "umm"
+// Welcome → Results
+btnResults.addEventListener("click", () => {
+  renderResults();
+  showScreen("results");
+});
+
+// Name submit
 btnNameSubmit.addEventListener("click", () => {
   userName = inputName.value.trim();
 
@@ -441,16 +559,15 @@ btnNameSubmit.addEventListener("click", () => {
     return;
   }
 
-  // Reset border style
   inputName.style.borderColor = "";
 
-  // Special flow: if the name is "umm" (case-insensitive), ask wife check
-  // Check if name is umma or maleha
   if (userName.toLowerCase() === "umma" || userName.toLowerCase() === "maleha") {
     showScreen("wifeCheck");
   } else {
-    // For any other name, go straight to the quiz
-    showScreen("notWife")
+    // Visitor flow
+    document.getElementById("visitor-name-display").textContent = userName;
+    visitorShowStep("visitor-welcome");
+    showScreen("visitor");
   }
 });
 
@@ -459,12 +576,49 @@ inputName.addEventListener("keydown", (e) => {
   if (e.key === "Enter") btnNameSubmit.click();
 });
 
-// Wife check: Yes → quiz, No → rejection screen
+// Wife check
 btnWifeYes.addEventListener("click", () => startQuiz());
-btnWifeNo.addEventListener("click", () => showScreen("notWife"));
+btnWifeNo.addEventListener("click", () => {
+  document.getElementById("visitor-name-display").textContent = userName;
+  visitorShowStep("visitor-welcome");
+  showScreen("visitor");
+});
 
-// Not-wife screen: back to start
-btnBackHome.addEventListener("click", () => resetApp());
+// Visitor flow
+btnVisitorReview.addEventListener("click", () => {
+  renderWifeAnswers();
+  visitorShowStep("visitor-review");
+});
+
+btnVisitorSkip.addEventListener("click", () => {
+  visitorShowStep("visitor-vote");
+});
+
+btnVisitorToVote.addEventListener("click", () => {
+  visitorShowStep("visitor-vote");
+});
+
+btnVoteBoy.addEventListener("click", () => {
+  saveVote(userName, "boy");
+  document.getElementById("visitor-vote-result").textContent = "👦 Team Boy";
+  visitorShowStep("visitor-thanks");
+});
+
+btnVoteGirl.addEventListener("click", () => {
+  saveVote(userName, "girl");
+  document.getElementById("visitor-vote-result").textContent = "👧 Team Girl";
+  visitorShowStep("visitor-thanks");
+});
+
+btnVisitorResults.addEventListener("click", () => {
+  renderResults();
+  showScreen("results");
+});
+
+btnVisitorHome.addEventListener("click", () => resetApp());
+
+// Results → Home
+btnResultsHome.addEventListener("click", () => resetApp());
 
 // Quiz answer buttons
 btnYes.addEventListener("click", () => answerQuestion(true));

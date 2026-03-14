@@ -29,10 +29,13 @@
       <p class="card-subtitle">A magical moment awaits</p>
       <p class="card-countdown-text" id="due-countdown"></p>
 
-      <button id="btn-start" class="btn btn-primary">
-        <span class="btn-sparkle"></span>
-        Start Reveal
-      </button>
+      <div class="btn-row welcome-btns">
+        <button id="btn-start" class="btn btn-primary">
+          <span class="btn-sparkle"></span>
+          Start Reveal
+        </button>
+        <button id="btn-results" class="btn btn-secondary">Vote Results</button>
+      </div>
     </div>
   </section>
 
@@ -76,14 +79,46 @@
     </div>
   </section>
 
-  <!-- ============ SCREEN 4: NOT WIFE ============ -->
-  <section id="screen-not-wife" class="screen">
-    <div class="card">
-      <p class="card-script">patience…</p>
-      <h2 class="card-title small">Nice Try! 😄</h2>
-      <p class="card-subtitle">Only the expecting mama can unlock the prediction.<br/>Sit tight — the big reveal is coming!</p>
-      <button id="btn-back-home" class="btn btn-secondary">Back to Start</button>
+  <!-- ============ SCREEN 4: VISITOR FLOW ============ -->
+  <section id="screen-visitor" class="screen">
+
+    <!-- Step 1: Welcome -->
+    <div class="card visitor-step active" id="visitor-welcome">
+      <p class="card-script">welcome!</p>
+      <h2 class="card-title small">Hey <span id="visitor-name-display"></span>!</h2>
+      <p class="card-subtitle">The mama-to-be takes the quiz, but you get to cast your vote! Boy or Girl — what's your prediction?</p>
+      <button id="btn-visitor-review" class="btn btn-primary">See Mama's Quiz Answers</button>
+      <button id="btn-visitor-skip" class="btn btn-secondary">Skip to Vote</button>
     </div>
+
+    <!-- Step 2: Review wife's answers -->
+    <div class="card card-wide visitor-step" id="visitor-review">
+      <p class="card-script">the old wives say...</p>
+      <h2 class="card-title small">Mama's Quiz Results</h2>
+      <div id="wife-answers-list" class="wife-answers-list"></div>
+      <button id="btn-visitor-to-vote" class="btn btn-primary">Cast Your Vote</button>
+    </div>
+
+    <!-- Step 3: Vote -->
+    <div class="card visitor-step" id="visitor-vote">
+      <p class="card-script">your prediction...</p>
+      <h2 class="card-title small">What Do You Think?</h2>
+      <p class="card-subtitle">Cast your vote for Team Boy or Team Girl!</p>
+      <div class="btn-row">
+        <button id="btn-vote-boy" class="btn btn-vote-boy">👦 Team Boy</button>
+        <button id="btn-vote-girl" class="btn btn-vote-girl">👧 Team Girl</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Thank you -->
+    <div class="card visitor-step" id="visitor-thanks">
+      <p class="card-script">thank you!</p>
+      <h2 class="card-title small">Vote Recorded!</h2>
+      <p class="card-subtitle">You voted <strong id="visitor-vote-result"></strong>.<br/>Check back to see how everyone else voted!</p>
+      <button id="btn-visitor-results" class="btn btn-primary">See Results</button>
+      <button id="btn-visitor-home" class="btn btn-secondary">Back to Start</button>
+    </div>
+
   </section>
 
   <!-- Quiz flash overlay -->
@@ -135,6 +170,43 @@
           <circle class="ring-progress" id="ring-progress" cx="60" cy="60" r="54" />
         </svg>
       </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN: VOTE RESULTS ============ -->
+  <section id="screen-results" class="screen">
+    <div class="card card-results">
+      <div class="card-ornament top-left"></div>
+      <div class="card-ornament top-right"></div>
+
+      <p class="card-script">the votes are in...</p>
+      <h2 class="card-title small">Vote Statistics</h2>
+      <p class="results-total">Total Votes: <span id="results-total-count">0</span></p>
+
+      <div class="results-grid">
+        <div class="team-card team-boy">
+          <span class="team-emoji">👶</span>
+          <h3 class="team-name">Team Boy</h3>
+          <p class="team-count" id="boy-count">0 votes</p>
+          <div class="team-bar-track">
+            <div class="team-bar-fill boy-fill" id="boy-bar"></div>
+          </div>
+          <p class="team-pct" id="boy-pct">0%</p>
+        </div>
+        <div class="team-card team-girl">
+          <span class="team-emoji">👶</span>
+          <h3 class="team-name">Team Girl</h3>
+          <p class="team-count" id="girl-count">0 votes</p>
+          <div class="team-bar-track">
+            <div class="team-bar-fill girl-fill" id="girl-bar"></div>
+          </div>
+          <p class="team-pct" id="girl-pct">0%</p>
+        </div>
+      </div>
+
+      <div class="voter-list" id="voter-list"></div>
+
+      <button id="btn-results-home" class="btn btn-secondary">Back to Start</button>
     </div>
   </section>
 
