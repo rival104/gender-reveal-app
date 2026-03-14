@@ -320,7 +320,11 @@ function doReveal() {
   // Determine result
   const isBoy = false; // boyScore >= girlScore;
   const gender = isBoy ? "boy" : "girl";
-  const genderPredicted = boyScore >= girlScore ? "boy" : "girl";
+  // Compute prediction from persisted quiz answers (survives page reload)
+  const savedAnswers = getWifeQuizAnswers();
+  let savedBoy = 0, savedGirl = 0;
+  savedAnswers.forEach(a => { if (a.scoredTeam === "boy") savedBoy++; else savedGirl++; });
+  const genderPredicted = savedBoy >= savedGirl ? "boy" : "girl";
 
   // Update reveal card content
   if (isBoy) {
@@ -333,10 +337,12 @@ function doReveal() {
     document.body.style.background = "linear-gradient(160deg, #fdf0f4 0%, #f8d0e0 100%)";
   }
 
-  const totalQ = quizQuestions.length;
-  const winScore = gender === "boy" ? boyScore : girlScore;
-  const pct = Math.round((winScore / totalQ) * 100);
-  revealSubtitle.innerHTML = `The Old Wives predicted <span class="gender-badge ${genderPredicted}">${genderPredicted.toUpperCase()} (${pct}%)</span> for ${userName || "you"}!`;
+  const totalQ = savedAnswers.length || quizQuestions.length;
+  const winScore = genderPredicted === "boy" ? savedBoy : savedGirl;
+  const pct = totalQ === 0 ? 0 : Math.round((winScore / totalQ) * 100);
+  revealSubtitle.innerHTML = savedAnswers.length > 0
+    ? `The Old Wives predicted <span class="gender-badge ${genderPredicted}">${genderPredicted.toUpperCase()} (${pct}%)</span> for ${userName || "you"}!`
+    : `The Old Wives have spoken!`;
 
   // Show the reveal screen with video first
   showScreen("reveal");
