@@ -767,6 +767,55 @@ body {
   margin-top: 20px;
 }
 
+/* ---------- PIN Entry ---------- */
+.pin-input-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 24px 0 8px;
+}
+
+.pin-digit {
+  width: 56px;
+  height: 64px;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(4px);
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pin-digit:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(212, 168, 83, 0.2);
+}
+
+.pin-digit.shake {
+  animation: pinShake 0.4s ease;
+}
+
+.pin-error {
+  color: #e53e3e;
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-height: 1.2em;
+  margin-bottom: 12px;
+}
+
+@keyframes pinShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 520px) {
   .card {

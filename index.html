@@ -206,7 +206,35 @@
 
       <div class="voter-list" id="voter-list"></div>
 
-      <button id="btn-results-home" class="btn btn-secondary">Back to Start</button>
+      <div class="btn-row">
+        <button id="btn-reveal-pin" class="btn btn-primary">The Big Reveal</button>
+        <button id="btn-results-home" class="btn btn-secondary">Back to Start</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN: PIN ENTRY ============ -->
+  <section id="screen-pin" class="screen">
+    <div class="card">
+      <div class="card-ornament top-left"></div>
+      <div class="card-ornament top-right"></div>
+
+      <p class="card-script">hold on…</p>
+      <h2 class="card-title small">Enter the Secret PIN</h2>
+      <p class="card-subtitle">Only authorized people can trigger the reveal!</p>
+
+      <div class="pin-input-row" id="pin-input-row">
+        <input type="tel" maxlength="1" class="pin-digit" data-pin-index="0" autocomplete="off" inputmode="numeric" />
+        <input type="tel" maxlength="1" class="pin-digit" data-pin-index="1" autocomplete="off" inputmode="numeric" />
+        <input type="tel" maxlength="1" class="pin-digit" data-pin-index="2" autocomplete="off" inputmode="numeric" />
+        <input type="tel" maxlength="1" class="pin-digit" data-pin-index="3" autocomplete="off" inputmode="numeric" />
+      </div>
+      <p class="pin-error" id="pin-error"></p>
+
+      <div class="btn-row">
+        <button id="btn-pin-submit" class="btn btn-primary">Unlock</button>
+        <button id="btn-pin-back" class="btn btn-secondary">Go Back</button>
+      </div>
     </div>
   </section>
 

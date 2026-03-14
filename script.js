@@ -89,6 +89,7 @@ const screens = {
   quiz:      document.getElementById("screen-quiz"),
   countdown: document.getElementById("screen-countdown"),
   results:   document.getElementById("screen-results"),
+  pin:       document.getElementById("screen-pin"),
   reveal:    document.getElementById("screen-reveal")
 };
 
@@ -109,6 +110,11 @@ const btnVoteGirl       = document.getElementById("btn-vote-girl");
 const btnVisitorResults = document.getElementById("btn-visitor-results");
 const btnVisitorHome    = document.getElementById("btn-visitor-home");
 const btnResultsHome    = document.getElementById("btn-results-home");
+const btnRevealPin      = document.getElementById("btn-reveal-pin");
+const btnPinSubmit      = document.getElementById("btn-pin-submit");
+const btnPinBack        = document.getElementById("btn-pin-back");
+const pinDigits         = document.querySelectorAll(".pin-digit");
+const pinError          = document.getElementById("pin-error");
 
 // Inputs & displays
 const inputName       = document.getElementById("input-name");
@@ -619,6 +625,62 @@ btnVisitorHome.addEventListener("click", () => resetApp());
 
 // Results → Home
 btnResultsHome.addEventListener("click", () => resetApp());
+
+// Results → PIN screen
+btnRevealPin.addEventListener("click", () => {
+  clearPin();
+  showScreen("pin");
+  setTimeout(() => pinDigits[0].focus(), 600);
+});
+
+// PIN digit auto-advance & backspace
+pinDigits.forEach((input, i) => {
+  input.addEventListener("input", () => {
+    input.value = input.value.replace(/\D/g, "").slice(0, 1);
+    if (input.value && i < pinDigits.length - 1) {
+      pinDigits[i + 1].focus();
+    }
+  });
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Backspace" && !input.value && i > 0) {
+      pinDigits[i - 1].focus();
+    }
+    if (e.key === "Enter") btnPinSubmit.click();
+  });
+});
+
+// PIN submit
+const REVEAL_PIN = "1213";
+
+btnPinSubmit.addEventListener("click", () => {
+  const entered = Array.from(pinDigits).map(d => d.value).join("");
+  if (entered.length < 4) {
+    pinError.textContent = "Enter all 4 digits";
+    return;
+  }
+  if (entered === REVEAL_PIN) {
+    pinError.textContent = "";
+    startCountdown();
+  } else {
+    pinError.textContent = "Wrong PIN — try again!";
+    pinDigits.forEach(d => {
+      d.classList.add("shake");
+      setTimeout(() => d.classList.remove("shake"), 500);
+    });
+    clearPin();
+    setTimeout(() => pinDigits[0].focus(), 500);
+  }
+});
+
+btnPinBack.addEventListener("click", () => {
+  renderResults();
+  showScreen("results");
+});
+
+function clearPin() {
+  pinDigits.forEach(d => { d.value = ""; });
+  pinError.textContent = "";
+}
 
 // Quiz answer buttons
 btnYes.addEventListener("click", () => answerQuestion(true));
