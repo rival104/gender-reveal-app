@@ -319,7 +319,8 @@ function startCountdown() {
 function doReveal() {
   // Determine result
   const isBoy = false; // boyScore >= girlScore;
-  const gender = boyScore >= girlScore ? "boy" : "girl";
+  const gender = isBoy ? "boy" : "girl";
+  const genderPredicted = boyScore >= girlScore ? "boy" : "girl";
 
   // Update reveal card content
   if (isBoy) {
@@ -335,7 +336,7 @@ function doReveal() {
   const totalQ = quizQuestions.length;
   const winScore = gender === "boy" ? boyScore : girlScore;
   const pct = Math.round((winScore / totalQ) * 100);
-  revealSubtitle.innerHTML = `The Old Wives predicted <span class="gender-badge ${gender}">${gender.toUpperCase()} (${pct}%)</span> for ${userName || "you"}!`;
+  revealSubtitle.innerHTML = `The Old Wives predicted <span class="gender-badge ${genderPredicted}">${genderPredicted.toUpperCase()} (${pct}%)</span> for ${userName || "you"}!`;
 
   // Show the reveal screen with video first
   showScreen("reveal");
@@ -352,13 +353,17 @@ function doReveal() {
     revealVideo.classList.remove("playing");
     revealCard.style.display = "";
     launchConfetti(gender);
+    setTimeout(() => showWinnerBubbles(gender), 1500);
   });
 
   // When video ends, show the card and confetti
   revealVideo.onended = () => {
     revealVideo.classList.remove("playing");
     revealCard.style.display = "";
-    setTimeout(() => launchConfetti(gender), 300);
+    setTimeout(() => {
+      launchConfetti(gender);
+      setTimeout(() => showWinnerBubbles(gender), 1500);
+    }, 300);
   };
 }
 
@@ -440,6 +445,33 @@ function launchConfetti(gender) {
 }
 
 // ==============================================
+// 10b. WINNER BUBBLES — voters who guessed right
+// ==============================================
+function showWinnerBubbles(gender) {
+  const container = document.getElementById("winner-bubbles");
+  container.innerHTML = "";
+
+  const votes = getVotes();
+  const winners = votes.filter(v => v.team === gender);
+
+  if (winners.length === 0) return;
+
+  winners.forEach((w, i) => {
+    setTimeout(() => {
+      const bubble = document.createElement("div");
+      bubble.className = `winner-bubble ${gender}`;
+      bubble.textContent = `${w.name} guessed right!`;
+
+      // Random horizontal position, staggered vertically
+      bubble.style.left = (10 + Math.random() * 70) + "%";
+      bubble.style.bottom = (10 + Math.random() * 30) + "%";
+
+      container.appendChild(bubble);
+    }, i * 800);
+  });
+}
+
+// ==============================================
 // 11. RESET — go back to beginning
 // ==============================================
 function resetApp() {
@@ -461,6 +493,9 @@ function resetApp() {
   // Hide video if playing
   revealVideo.pause();
   revealVideo.classList.remove("playing");
+
+  // Clear winner bubbles
+  document.getElementById("winner-bubbles").innerHTML = "";
 
   // Reset visitor steps
   document.querySelectorAll(".visitor-step").forEach(s => s.classList.remove("active"));

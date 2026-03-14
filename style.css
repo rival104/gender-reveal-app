@@ -768,6 +768,61 @@ body {
   margin-top: 20px;
 }
 
+/* ---------- Winner Bubbles ---------- */
+.winner-bubbles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 14;
+  overflow: hidden;
+}
+
+.winner-bubble {
+  position: absolute;
+  padding: 8px 18px;
+  border-radius: 99px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #fff;
+  white-space: nowrap;
+  opacity: 0;
+  animation: bubbleFloat 1s ease-out forwards, bubbleBob 3s ease-in-out 1s infinite;
+}
+
+.winner-bubble.boy {
+  background: linear-gradient(135deg, #6aadcf, #4a9bbf);
+  box-shadow: 0 4px 16px rgba(106, 173, 207, 0.4);
+}
+
+.winner-bubble.girl {
+  background: linear-gradient(135deg, #e8729a, #d45d88);
+  box-shadow: 0 4px 16px rgba(232, 114, 154, 0.4);
+}
+
+@keyframes bubbleFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.6);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-12px) scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes bubbleBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
 /* ---------- PIN Entry ---------- */
 .pin-input-row {
   display: flex;
